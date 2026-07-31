@@ -4,6 +4,19 @@
 
 [![CI](https://github.com/techishan432/InferX/actions/workflows/ci.yml/badge.svg)](https://github.com/techishan432/InferX/actions/workflows/ci.yml)
 
+### 🟠 Level 3 - Orange Belt Submission
+InferX is a complete end-to-end Stellar dApp with advanced contract logic, comprehensive testing, automated CI/CD, and production-ready infrastructure. 
+
+**Requirements Checklist:**
+- [x] **Complete End-to-End dApp:** Fully functional marketplace for AI providers and consumers.
+- [x] **Advanced Contract Logic:** 4 interoperating Soroban contracts (Registry, Escrow, Ratings, History).
+- [x] **Testing:** 59 automated Rust tests for contracts + Next.js build validation.
+- [x] **Deployment:** Frontend live on Vercel Edge; Contracts live on Stellar Testnet.
+- [x] **CI/CD:** Automated GitHub Actions pipeline for contract tests and frontend builds.
+- [x] **Production-Ready Infrastructure:** PostgreSQL (Neon), Vercel, Freighter Wallet Integration, and AES-256 API Key Encryption.
+
+---
+
 InferX is a decentralized marketplace where AI model providers list their inference endpoints and consumers access them with transparent, on-chain payments via the Stellar blockchain. Built with Next.js and Soroban smart contracts, InferX eliminates middlemen and gives providers full control over pricing while ensuring consumers get the best rates.
 
 ## Live Demo
