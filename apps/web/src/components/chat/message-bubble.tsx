@@ -48,24 +48,24 @@ export function MessageBubble({
     >
       <div
         className={cn(
-          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-          isUser ? "bg-cyan-500/20" : "bg-zinc-700/50"
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-xs",
+          isUser ? "bg-cyan-500 text-white" : "bg-violet-600/10 text-violet-600 dark:text-violet-400 border border-violet-500/20"
         )}
       >
         {isUser ? (
-          <User className="h-4 w-4 text-cyan-400" />
+          <User className="h-4 w-4" />
         ) : (
-          <Bot className="h-4 w-4 text-zinc-300" />
+          <Bot className="h-4 w-4" />
         )}
       </div>
 
-      <div className={cn("flex max-w-[80%] flex-col gap-1", isUser ? "items-end" : "items-start")}>
+      <div className={cn("flex max-w-[85%] flex-col gap-1", isUser ? "items-end" : "items-start")}>
         <div
           className={cn(
-            "rounded-2xl px-4 py-2.5",
+            "rounded-2xl px-4 py-2.5 shadow-xs transition-colors",
             isUser
-              ? "rounded-tr-sm bg-cyan-500/20 text-zinc-100"
-              : "rounded-tl-sm bg-zinc-800/50 text-zinc-200"
+              ? "rounded-tr-sm bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-cyan-500/10"
+              : "rounded-tl-sm bg-card/90 border border-border/80 text-foreground backdrop-blur-md"
           )}
         >
           {images && images.length > 0 && (
@@ -76,12 +76,15 @@ export function MessageBubble({
                   key={i}
                   src={src}
                   alt={`Upload ${i + 1}`}
-                  className="h-24 w-24 rounded-lg border border-white/10 object-cover"
+                  className="h-24 w-24 rounded-lg border border-border object-cover"
                 />
               ))}
             </div>
           )}
-          <div className="prose prose-invert prose-sm max-w-none break-words prose-p:leading-relaxed prose-pre:p-0 prose-headings:text-zinc-100 prose-a:text-cyan-400">
+          <div className={cn(
+            "prose prose-sm max-w-none break-words prose-p:leading-relaxed prose-pre:p-0",
+            isUser ? "text-white prose-headings:text-white prose-a:text-white/90" : "dark:prose-invert prose-headings:text-foreground prose-a:text-cyan-500"
+          )}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -92,7 +95,7 @@ export function MessageBubble({
                     return <CodeBlock language={match[1]} code={codeString} />
                   }
                   return (
-                    <code className="rounded bg-zinc-700/50 px-1.5 py-0.5 text-xs text-cyan-300" {...props}>
+                    <code className={cn("rounded px-1.5 py-0.5 text-xs font-mono", isUser ? "bg-white/20 text-white" : "bg-muted text-cyan-600 dark:text-cyan-400")} {...props}>
                       {children}
                     </code>
                   )

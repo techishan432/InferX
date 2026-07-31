@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { getSession } from '@/lib/auth'
 import { encrypt } from '@/lib/encryption'
 
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
     })
 
     if (!provider) {
-      return Response.json({ error: 'Not registered as a provider' }, { status: 403 })
+      return Response.json({ error: 'User is not registered as a provider' }, { status: 403 })
     }
 
     const data = await request.json()
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
     const encryptedApiKey = await encrypt(apiKey)
     const encryptedBaseUrl = await encrypt(baseUrl)
 
-    const endpoint = await prisma.$transaction(async (tx: any) => {
+    const endpoint = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const newEndpoint = await tx.endpoint.create({
         data: {
           providerId: provider.id,

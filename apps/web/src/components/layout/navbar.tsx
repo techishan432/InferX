@@ -8,6 +8,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { GradientText } from "@/components/ui/gradient-text"
 import { WalletButton } from "@/components/wallet/wallet-button"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import {
   Sheet,
   SheetContent,
@@ -45,7 +46,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-8">
           <Link href="/" className="text-xl font-bold">
@@ -66,8 +67,8 @@ export function Navbar() {
                     className={cn(
                       "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                       isActive
-                        ? "text-cyan-400"
-                        : "text-zinc-400 hover:text-white"
+                        ? "text-cyan-500 font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {link.label}
@@ -79,6 +80,8 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
+
           <div className="hidden md:block">
             <WalletButton />
           </div>
@@ -86,7 +89,7 @@ export function Navbar() {
           {isConnected && user && (
             <div className="hidden md:block">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 outline-none">
+                <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-violet-600 outline-none shadow-sm">
                   <span className="text-xs font-bold text-white">
                     {user.displayName?.[0]?.toUpperCase() ?? "U"}
                   </span>
@@ -122,7 +125,7 @@ export function Navbar() {
       </nav>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="right" className="w-72 bg-zinc-950 border-white/10">
+        <SheetContent side="right" className="w-72 bg-background border-border">
           <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
           <SheetDescription className="sr-only">
             Mobile navigation menu
@@ -143,14 +146,14 @@ export function Navbar() {
                 className={cn(
                   "rounded-lg px-4 py-3 text-sm font-medium transition-colors",
                   pathname === link.href
-                    ? "bg-cyan-500/10 text-cyan-400"
-                    : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                    ? "bg-cyan-500/10 text-cyan-500 font-semibold"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="mt-4 border-t border-white/10 pt-4">
+            <div className="mt-4 border-t border-border pt-4">
               <WalletButton />
             </div>
           </div>

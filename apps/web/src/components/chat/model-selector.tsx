@@ -34,17 +34,17 @@ export function ModelSelector({ value, onValueChange }: ModelSelectorProps) {
 
   return (
     <Select value={value} onValueChange={(v) => { if (v) onValueChange(v) }}>
-      <SelectTrigger className="w-full min-w-[200px]">
+      <SelectTrigger className="w-full min-w-[200px] border-border bg-card/80 backdrop-blur-md">
         <SelectValue
           placeholder="Select a model"
           render={() =>
             selectedEndpoint ? (
               <span className="flex items-center gap-2">
-                <span className="font-medium text-white">{selectedEndpoint.displayName}</span>
-                <span className="text-zinc-500 text-xs">{selectedEndpoint.provider.name}</span>
+                <span className="font-semibold text-foreground">{selectedEndpoint.displayName}</span>
+                <span className="text-muted-foreground text-xs">{selectedEndpoint.provider.name}</span>
               </span>
             ) : (
-              <span className="text-zinc-400">Select a model</span>
+              <span className="text-muted-foreground">Select a model</span>
             )
           }
         />
@@ -52,29 +52,29 @@ export function ModelSelector({ value, onValueChange }: ModelSelectorProps) {
       <SelectContent>
         <div className="p-2">
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400" />
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search models..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 h-7 text-xs"
+              className="pl-8 h-7 text-xs bg-muted/40 border-border"
               onKeyDown={(e) => e.stopPropagation()}
             />
           </div>
         </div>
         <div className="max-h-64 overflow-y-auto">
           {isLoading && (
-            <div className="px-4 py-2 text-xs text-zinc-500">Loading models...</div>
+            <div className="px-4 py-2 text-xs text-muted-foreground">Loading models...</div>
           )}
           {!isLoading && endpoints.length === 0 && (
-            <div className="px-4 py-2 text-xs text-zinc-500">No models found</div>
+            <div className="px-4 py-2 text-xs text-muted-foreground">No models found</div>
           )}
           {endpoints.map((ep) => (
             <SelectItem key={ep.id} value={ep.id}>
               <div className="flex w-full items-center justify-between gap-2">
                 <div className="flex flex-col items-start">
                   <span className="text-sm font-medium">{ep.displayName}</span>
-                  <span className="text-[10px] text-zinc-400">
+                  <span className="text-[10px] text-muted-foreground">
                     {ep.provider.name} &middot; {ep.pricePerRequest} XLM
                   </span>
                 </div>

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { PanelLeftClose, PanelLeft } from "lucide-react"
+import { PanelLeftClose, PanelLeft, ArrowLeft } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { useChatStream } from "@/hooks/use-chat-stream"
@@ -12,6 +12,11 @@ import { ChatSidebar } from "@/components/chat/chat-sidebar"
 import { ChatMessages } from "@/components/chat/chat-messages"
 import { ChatInput } from "@/components/chat/chat-input"
 import { ModelSelector } from "@/components/chat/model-selector"
+
+import Link from "next/link"
+import { GradientText } from "@/components/ui/gradient-text"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { Badge } from "@/components/ui/badge"
 
 function ChatContent() {
   const router = useRouter()
@@ -116,7 +121,7 @@ function ChatContent() {
   }, [messages, handleSend])
 
   return (
-    <>
+    <div className="flex h-screen w-full overflow-hidden bg-theme-pattern text-foreground">
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div
@@ -124,7 +129,7 @@ function ChatContent() {
             animate={{ width: 256, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="hidden md:block overflow-hidden"
+            className="hidden md:block overflow-hidden h-full"
           >
             <ChatSidebar
               activeConversationId={activeConversationId}
@@ -136,13 +141,13 @@ function ChatContent() {
         )}
       </AnimatePresence>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2">
+      <div className="flex flex-1 flex-col overflow-hidden h-full">
+        <div className="flex items-center gap-3 border-b border-border bg-card/60 backdrop-blur-md px-4 py-2.5">
           <Button
             variant="ghost"
             size="icon-sm"
             onClick={() => setSidebarOpen((v) => !v)}
-            className="hidden md:flex text-zinc-400"
+            className="hidden md:flex text-muted-foreground hover:text-foreground"
           >
             {sidebarOpen ? (
               <PanelLeftClose className="h-4 w-4" />
@@ -151,23 +156,40 @@ function ChatContent() {
             )}
           </Button>
 
-          <div className="flex items-center gap-2 flex-1">
+          <Link
+            href="/marketplace"
+            className="flex items-center gap-1.5 rounded-lg border border-border/60 bg-muted/30 px-2.5 py-1 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-all shadow-xs"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 text-cyan-500" />
+            Back
+          </Link>
+
+          <Link href="/" className="text-lg font-bold mr-2">
+            <GradientText>InferX</GradientText>
+          </Link>
+
+          <div className="flex items-center gap-2 flex-1 max-w-sm">
             <ModelSelector
               value={selectedEndpoint}
               onValueChange={handleEndpointChange}
             />
           </div>
 
-          {endpoint && (
-            <div className="hidden items-center gap-3 text-xs text-zinc-400 sm:flex">
-              <span>{endpoint.pricePerRequest} XLM/req</span>
-              {endpoint.supportsStreaming && (
-                <span className="rounded bg-cyan-500/10 px-1.5 py-0.5 text-[10px] text-cyan-400">
-                  Streaming
-                </span>
-              )}
-            </div>
-          )}
+          <div className="ml-auto flex items-center gap-3">
+            {endpoint && (
+              <div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex">
+                <Badge variant="cyan" className="text-[10px]">
+                  {endpoint.pricePerRequest} XLM/req
+                </Badge>
+                {endpoint.supportsStreaming && (
+                  <Badge variant="violet" className="text-[10px]">
+                    Streaming
+                  </Badge>
+                )}
+              </div>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
 
         <ChatMessages
@@ -178,7 +200,7 @@ function ChatContent() {
         />
 
         {error && (
-          <div className="mx-4 mb-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+          <div className="mx-4 mb-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
             {error}
           </div>
         )}
@@ -191,7 +213,7 @@ function ChatContent() {
           estimatedCost={endpoint?.pricePerRequest}
         />
       </div>
-    </>
+    </div>
   )
 }
 
@@ -199,8 +221,8 @@ export default function ChatPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex h-screen items-center justify-center bg-zinc-950">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-700 border-t-cyan-400" />
+        <div className="flex h-screen items-center justify-center bg-theme-pattern">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-cyan-500" />
         </div>
       }
     >

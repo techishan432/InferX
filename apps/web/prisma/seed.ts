@@ -2,7 +2,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient, Role, TransactionStatus, HealthStatus } from '@prisma/client'
 
 const adapter = new PrismaPg(process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/inferx')
-const prisma = new PrismaClient({ adapter } as any)
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
   console.log('Seeding database...')
@@ -191,7 +191,7 @@ async function main() {
     },
   })
 
-  const tx1 = await prisma.transaction.create({
+  await prisma.transaction.create({
     data: {
       consumerId: consumerUser.id,
       providerId: provider1.id,
@@ -207,7 +207,7 @@ async function main() {
     },
   })
 
-  const tx2 = await prisma.transaction.create({
+  await prisma.transaction.create({
     data: {
       consumerId: consumerUser.id,
       providerId: provider1.id,
@@ -223,7 +223,7 @@ async function main() {
     },
   })
 
-  const tx3 = await prisma.transaction.create({
+  await prisma.transaction.create({
     data: {
       consumerId: consumerUser.id,
       providerId: provider2.id,

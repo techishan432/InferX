@@ -63,11 +63,11 @@ export function ChatSidebar({
   }, [conversations, search])
 
   return (
-    <div className="flex h-full w-64 shrink-0 flex-col border-r border-white/10 bg-zinc-950/50">
+    <div className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-card/70 backdrop-blur-md">
       <div className="p-3">
         <Button
-          variant="outline"
-          className="w-full justify-start gap-2 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+          variant="gradient"
+          className="w-full justify-start gap-2 text-white font-medium shadow-sm"
           onClick={onNew}
         >
           <Plus className="h-4 w-4" />
@@ -77,32 +77,32 @@ export function ChatSidebar({
 
       <div className="px-3 pb-2">
         <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search conversations..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8 h-7 text-xs"
+            className="pl-8 h-7 text-xs bg-muted/40 border-border/80"
           />
         </div>
       </div>
 
-      <Separator className="bg-white/5" />
+      <Separator className="bg-border/60" />
 
       <ScrollArea className="flex-1">
         <div className="p-2">
           {isLoading && (
             <div className="space-y-2 p-2">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-14 animate-pulse rounded-lg bg-white/5" />
+                <div key={i} className="h-14 animate-pulse rounded-lg bg-muted/50" />
               ))}
             </div>
           )}
 
           {!isLoading && filtered.length === 0 && (
             <div className="flex flex-col items-center gap-2 py-8 text-center">
-              <MessageSquare className="h-6 w-6 text-zinc-600" />
-              <p className="text-xs text-zinc-500">
+              <MessageSquare className="h-6 w-6 text-muted-foreground/60" />
+              <p className="text-xs text-muted-foreground">
                 {search ? "No matching conversations" : "No conversations yet"}
               </p>
             </div>
@@ -122,8 +122,8 @@ export function ChatSidebar({
                   className={cn(
                     "group flex w-full flex-col gap-0.5 rounded-lg px-3 py-2.5 text-left transition-colors",
                     conv.id === activeConversationId
-                      ? "bg-cyan-500/10 text-white"
-                      : "text-zinc-400 hover:bg-white/5 hover:text-zinc-200"
+                      ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-semibold border border-cyan-500/20"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -133,15 +133,15 @@ export function ChatSidebar({
                         e.stopPropagation()
                         onDelete(conv.id)
                       }}
-                      className="shrink-0 rounded p-1 text-zinc-600 opacity-0 transition-all hover:bg-red-500/10 hover:text-red-400 group-hover:opacity-100"
+                      className="shrink-0 rounded p-1 text-muted-foreground/60 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
                   </div>
                   <div className="flex items-center gap-1.5 text-[10px]">
-                    <span className="truncate text-zinc-500">{conv.endpoint.displayName}</span>
-                    <span className="text-zinc-700">&middot;</span>
-                    <span className="shrink-0 text-zinc-600">{formatDate(conv.updatedAt)}</span>
+                    <span className="truncate text-muted-foreground">{conv.endpoint.displayName}</span>
+                    <span className="text-muted-foreground/40">&middot;</span>
+                    <span className="shrink-0 text-muted-foreground/80">{formatDate(conv.updatedAt)}</span>
                   </div>
                 </button>
               </motion.div>

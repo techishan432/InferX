@@ -77,28 +77,33 @@ export function AddEndpointDialog({ open, onOpenChange, endpoint }: AddEndpointD
   const createMutation = useCreateEndpoint()
   const updateMutation = useUpdateEndpoint()
 
-  React.useEffect(() => {
-    if (endpoint) {
-      setForm({
-        modelName: endpoint.modelName,
-        displayName: endpoint.displayName,
-        description: endpoint.description ?? "",
-        baseUrl: "",
-        apiKey: "",
-        pricePerRequest: endpoint.pricePerRequest,
-        maxInputTokens: "4096",
-        maxOutputTokens: "2048",
-        contextLength: "8192",
-        rateLimit: "60",
-        location: "",
-        supportsStreaming: true,
-        supportsVision: false,
-      })
-    } else {
-      setForm(emptyForm)
+  const [prevKey, setPrevKey] = React.useState({ open: false, endpointId: endpoint?.id })
+
+  if (open !== prevKey.open || endpoint?.id !== prevKey.endpointId) {
+    setPrevKey({ open, endpointId: endpoint?.id })
+    if (open) {
+      setForm(
+        endpoint
+          ? {
+              modelName: endpoint.modelName,
+              displayName: endpoint.displayName,
+              description: endpoint.description ?? "",
+              baseUrl: "",
+              apiKey: "",
+              pricePerRequest: endpoint.pricePerRequest,
+              maxInputTokens: "4096",
+              maxOutputTokens: "2048",
+              contextLength: "8192",
+              rateLimit: "60",
+              location: "",
+              supportsStreaming: true,
+              supportsVision: false,
+            }
+          : emptyForm
+      )
+      setErrors({})
     }
-    setErrors({})
-  }, [endpoint, open])
+  }
 
   function validate(): boolean {
     const e: Partial<Record<keyof EndpointFormData, string>> = {}

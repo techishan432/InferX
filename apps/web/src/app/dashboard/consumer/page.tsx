@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { DollarSign, Zap, MessageSquare, ArrowRight } from "lucide-react"
 import { useConsumerDashboard } from "@/hooks/use-consumer"
@@ -14,37 +13,43 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 
 export default function ConsumerDashboardPage() {
-  const router = useRouter()
-  const { user, isAuthenticated } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
   const { data: dashboard, isLoading } = useConsumerDashboard()
+
+  const fallbackSpendingData = React.useMemo(() => {
+    return Array.from({ length: 30 }, (_, i) => {
+      const d = new Date(2026, 6, 1 + i)
+      const pseudoAmount = Math.cos(i * 0.8) * 2 + 3
+      return {
+        date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        amount: Math.round(pseudoAmount * 100) / 100,
+      }
+    })
+  }, [])
+
+  const spendingData = React.useMemo(() => {
+    if (!dashboard?.spendingOverTime) return fallbackSpendingData
+    return dashboard.spendingOverTime.map((item) => ({
+      date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      amount: item.amount,
+    }))
+  }, [dashboard, fallbackSpendingData])
+
+  const { loginDemoUser } = useAuthStore()
 
   if (!isAuthenticated) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="text-2xl font-bold text-white">Consumer Dashboard</h2>
-        <p className="max-w-md text-zinc-400">
-          Connect your Stellar wallet to access your dashboard, track spending, and manage conversations.
+        <h2 className="text-2xl font-bold">Consumer Dashboard</h2>
+        <p className="max-w-md text-muted-foreground">
+          Connect your Stellar wallet or explore in Demo Mode to track spending and manage conversations.
         </p>
-        <Button>
-          <Link href="/" className="flex items-center gap-1.5">
-            Connect Wallet
-          </Link>
+        <Button variant="gradient" onClick={() => loginDemoUser(false)}>
+          Explore Consumer Dashboard
         </Button>
       </div>
     )
   }
-
-  const spendingData = dashboard?.spendingOverTime?.map((item) => ({
-    date: new Date(item.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-    amount: item.amount,
-  })) ?? Array.from({ length: 30 }, (_, i) => {
-    const d = new Date()
-    d.setDate(d.getDate() - (29 - i))
-    return {
-      date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      amount: Math.random() * 5 + 0.5,
-    }
-  })
 
   return (
     <div className="space-y-8">

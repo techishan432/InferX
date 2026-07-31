@@ -68,26 +68,26 @@ export function EndpointCard({
       whileHover={{ scale: 1.02 }}
       className="group relative"
     >
-      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-5 backdrop-blur-md transition-all duration-300 hover:border-cyan-500/30 hover:bg-white/[0.07] hover:shadow-lg hover:shadow-cyan-500/5">
+      <div className="relative overflow-hidden rounded-xl border border-border/80 bg-card/90 p-5 backdrop-blur-md transition-all duration-300 hover:border-cyan-500/40 hover:bg-card hover:shadow-lg hover:shadow-cyan-500/10">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-zinc-400 truncate">{providerName}</p>
-            <h3 className="mt-1 text-sm font-semibold text-white truncate">{displayName}</h3>
-            <p className="mt-0.5 text-xs text-zinc-500 truncate">{modelName}</p>
+            <p className="text-xs font-medium text-muted-foreground truncate">{providerName}</p>
+            <h3 className="mt-1 text-sm font-semibold text-foreground truncate">{displayName}</h3>
+            <p className="mt-0.5 text-xs text-muted-foreground/80 truncate">{modelName}</p>
           </div>
           <div className="flex items-center gap-1.5 ml-3">
             <div
               className={cn(
                 "h-2 w-2 rounded-full",
-                isOnline ? "bg-emerald-400 shadow-sm shadow-emerald-400/50" : "bg-zinc-500"
+                isOnline ? "bg-emerald-500 shadow-sm shadow-emerald-500/50" : "bg-muted-foreground"
               )}
             />
           </div>
         </div>
 
         <div className="mt-4 flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-white">{pricePerRequest}</span>
-          <Badge variant="secondary" className="text-[10px]">
+          <span className="text-2xl font-bold text-foreground">{pricePerRequest}</span>
+          <Badge variant="cyan" className="text-[10px]">
             XLM
           </Badge>
         </div>
@@ -97,24 +97,24 @@ export function EndpointCard({
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-          <div className="flex items-center gap-1.5 text-zinc-400">
-            <Zap className="h-3 w-3" />
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Zap className="h-3 w-3 text-cyan-500" />
             <span>{formatContextLength(contextLength)} tokens</span>
           </div>
-          <div className="flex items-center gap-1.5 text-zinc-400">
-            <Radio className="h-3 w-3" />
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Radio className="h-3 w-3 text-violet-500" />
             <span>{Number(totalRequests).toLocaleString()} reqs</span>
           </div>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-1.5">
           {supportsStreaming && (
-            <Badge variant="outline" className="border-cyan-500/30 text-cyan-400 text-[10px]">
+            <Badge variant="cyan" className="text-[10px]">
               Streaming
             </Badge>
           )}
           {supportsVision && (
-            <Badge variant="outline" className="border-purple-500/30 text-purple-400 text-[10px]">
+            <Badge variant="violet" className="text-[10px]">
               <Eye className="mr-1 h-2.5 w-2.5" />
               Vision
             </Badge>
@@ -123,7 +123,7 @@ export function EndpointCard({
 
         <Link
           href={`/chat?endpoint=${id}`}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/10 hover:border-cyan-500/30"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-accent/30 px-4 py-2 text-sm font-medium text-foreground transition-all hover:bg-cyan-500 hover:text-white hover:border-cyan-500 shadow-xs"
         >
           Use Model
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -135,16 +135,16 @@ export function EndpointCard({
 
 export function EndpointCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 p-5 space-y-3">
-      <div className="h-3 w-20 animate-pulse rounded bg-white/10" />
-      <div className="h-5 w-36 animate-pulse rounded bg-white/10" />
-      <div className="h-8 w-24 animate-pulse rounded bg-white/10" />
-      <div className="h-3 w-28 animate-pulse rounded bg-white/10" />
+    <div className="rounded-xl border border-border bg-card/60 p-5 space-y-3">
+      <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+      <div className="h-5 w-36 animate-pulse rounded bg-muted" />
+      <div className="h-8 w-24 animate-pulse rounded bg-muted" />
+      <div className="h-3 w-28 animate-pulse rounded bg-muted" />
       <div className="grid grid-cols-2 gap-2">
-        <div className="h-4 animate-pulse rounded bg-white/10" />
-        <div className="h-4 animate-pulse rounded bg-white/10" />
+        <div className="h-4 animate-pulse rounded bg-muted" />
+        <div className="h-4 animate-pulse rounded bg-muted" />
       </div>
-      <div className="h-9 animate-pulse rounded-lg bg-white/10" />
+      <div className="h-9 animate-pulse rounded-lg bg-muted" />
     </div>
   )
 }

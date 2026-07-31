@@ -1,13 +1,20 @@
-export async function inference(params: {
+export interface ChatMessage {
+  role: string
+  content: string | Record<string, unknown> | Array<Record<string, unknown>>
+}
+
+export interface InferenceParams {
   baseUrl: string
   apiKey: string
   model: string
-  messages: Array<{ role: string; content: any }>
+  messages: ChatMessage[]
   stream?: boolean
   temperature?: number
   maxTokens?: number
   images?: string[]
-}): Promise<Response> {
+}
+
+export async function inference(params: InferenceParams): Promise<Response> {
   const {
     baseUrl,
     apiKey,
@@ -24,7 +31,7 @@ export async function inference(params: {
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      const body: Record<string, any> = {
+      const body: Record<string, unknown> = {
         model,
         messages: messages.map(msg => {
           if (msg.role === 'user' && images && images.length > 0) {

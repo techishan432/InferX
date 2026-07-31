@@ -5,8 +5,7 @@ import { useWalletStore } from "@/store/wallet-store"
 import { useAuthStore } from "@/store/auth-store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Wallet, RefreshCw, CheckCircle, AlertCircle, Copy, ExternalLink } from "lucide-react"
+import { Wallet, RefreshCw, CheckCircle, AlertCircle, Copy } from "lucide-react"
 
 export function WalletSettings() {
   const { user } = useAuthStore()

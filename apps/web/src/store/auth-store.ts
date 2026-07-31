@@ -20,6 +20,7 @@ interface AuthState {
 
 interface AuthActions {
   login: (walletAddress: string, signedMessage: string, signature: string) => Promise<void>
+  loginDemoUser: (isProvider?: boolean) => void
   logout: () => Promise<void>
   fetchUser: () => Promise<void>
 }
@@ -36,6 +37,21 @@ export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
       ...initialState,
+
+      loginDemoUser: (isProvider = true) => {
+        set({
+          user: {
+            id: 'demo-user-id',
+            walletAddress: 'GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335WF2CCAJ3FSTZAKZDXFYS6POV',
+            displayName: isProvider ? 'Demo Provider' : 'Demo Consumer',
+            role: isProvider ? 'PROVIDER' : 'CONSUMER',
+            isProvider,
+            isConsumer: !isProvider,
+          },
+          isAuthenticated: true,
+          isLoading: false,
+        })
+      },
 
       login: async (walletAddress: string, signedMessage: string, signature: string) => {
         set({ isLoading: true })

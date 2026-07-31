@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, Suspense } from "react"
+import { useState, useEffect, useCallback, useMemo, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Search, Sparkles } from "lucide-react"
@@ -64,7 +64,10 @@ function MarketplaceContent() {
     return () => clearTimeout(timeout)
   }, [searchInput])
 
-  const effectiveFilters: Filters = { ...filters, search: debouncedSearch }
+  const effectiveFilters: Filters = useMemo(
+    () => ({ ...filters, search: debouncedSearch }),
+    [filters, debouncedSearch]
+  )
 
   const sortOption = SORT_OPTIONS.find((o) => o.value === sortBy)
   const sortField = sortOption?.value.split("-")[0] || "popularity"
@@ -91,8 +94,7 @@ function MarketplaceContent() {
 
   useEffect(() => {
     syncUrl(effectiveFilters, sortBy, page)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, filters.model, filters.minPrice, filters.maxPrice, filters.contextLength, filters.streaming, filters.vision, sortBy, page, syncUrl])
+  }, [effectiveFilters, sortBy, page, syncUrl])
 
   const handleFilterChange = useCallback(
     (newFilters: Filters) => {
@@ -127,21 +129,21 @@ function MarketplaceContent() {
   const endpoints = data?.data ?? []
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-theme-pattern text-foreground">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-400">
-            <Sparkles className="h-3 w-3" />
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-600 dark:text-cyan-400 shadow-sm">
+            <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
             AI Model Marketplace
           </div>
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">
+          <h1 className="text-3xl font-bold text-foreground sm:text-4xl tracking-tight">
             Discover AI Models
           </h1>
-          <p className="mt-2 text-zinc-400">
+          <p className="mt-2 text-muted-foreground">
             Browse and connect with AI models powered by Stellar blockchain payments
           </p>
         </motion.div>

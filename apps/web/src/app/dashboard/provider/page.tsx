@@ -2,7 +2,6 @@
 
 import { useProviderDashboard, useProviderEndpoints } from "@/hooks/use-provider"
 import { useAuthStore } from "@/store/auth-store"
-import { useRouter } from "next/navigation"
 import * as React from "react"
 import { DollarSign, Activity, Zap, Star, BarChart3, Plus, ExternalLink } from "lucide-react"
 import { RevenueCard } from "@/components/dashboard/revenue-card"
@@ -10,26 +9,35 @@ import { RevenueChart } from "@/components/dashboard/revenue-chart"
 import { EndpointManager } from "@/components/dashboard/endpoint-manager"
 import { TransactionsList } from "@/components/dashboard/transactions-list"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 
 export default function ProviderDashboardPage() {
-  const router = useRouter()
   const { user, isAuthenticated } = useAuthStore()
   const { data: dashboard, isLoading: dashLoading } = useProviderDashboard()
   const { data: endpoints, isLoading: endpointsLoading } = useProviderEndpoints()
 
+  const revenueData = React.useMemo(() => {
+    return Array.from({ length: 30 }, (_, i) => {
+      const d = new Date(2026, 6, 1 + i)
+      const pseudoRandom = Math.sin(i * 1.5) * 20 + 30
+      return {
+        date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        revenue: Math.round(pseudoRandom * 100) / 100,
+      }
+    })
+  }, [])
+
+  const { loginDemoUser } = useAuthStore()
+
   if (!isAuthenticated) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="text-2xl font-bold text-white">Provider Dashboard</h2>
-        <p className="max-w-md text-zinc-400">
-          Connect your Stellar wallet to access the provider dashboard and manage your AI endpoints.
+        <h2 className="text-2xl font-bold">Provider Dashboard</h2>
+        <p className="max-w-md text-muted-foreground">
+          Connect your Stellar wallet or explore in Demo Mode to manage your AI endpoints.
         </p>
-        <Button>
-          <Link href="/" className="flex items-center gap-1.5">
-            Connect Wallet
-          </Link>
+        <Button variant="gradient" onClick={() => loginDemoUser(true)}>
+          Explore Provider Dashboard
         </Button>
       </div>
     )
@@ -38,27 +46,16 @@ export default function ProviderDashboardPage() {
   if (isAuthenticated && user && !user.isProvider) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="text-2xl font-bold text-white">Not a Provider</h2>
-        <p className="max-w-md text-zinc-400">
-          Register as a provider to access this dashboard. You can do this from your wallet settings.
+        <h2 className="text-2xl font-bold">Switch to Provider Mode</h2>
+        <p className="max-w-md text-muted-foreground">
+          You are currently in consumer mode. Switch to provider mode to access endpoint management and revenue metrics.
         </p>
-        <Button>
-          <Link href="/marketplace" className="flex items-center gap-1.5">
-            Browse Marketplace
-          </Link>
+        <Button variant="gradient" onClick={() => loginDemoUser(true)}>
+          Switch to Provider View
         </Button>
       </div>
     )
   }
-
-  const revenueData = Array.from({ length: 30 }, (_, i) => {
-    const d = new Date()
-    d.setDate(d.getDate() - (29 - i))
-    return {
-      date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      revenue: Math.random() * 50 + 10,
-    }
-  })
 
   return (
     <div className="space-y-8">

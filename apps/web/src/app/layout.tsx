@@ -31,10 +31,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${inter.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-black text-white">
+      <body className="min-h-full bg-theme-pattern text-foreground transition-colors duration-300">
         <AppProviders>
           <LayoutChrome>{children}</LayoutChrome>
         </AppProviders>

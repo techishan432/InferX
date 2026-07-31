@@ -22,7 +22,7 @@ export default function TransactionsPage() {
 
   const viewType = user?.isProvider ? "provider" : user?.isConsumer ? "consumer" : "all"
 
-  const { data, isLoading, isFetching } = useTransactions({
+  const { data, isLoading } = useTransactions({
     page,
     pageSize: 20,
     status: filters.status || undefined,

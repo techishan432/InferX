@@ -5,18 +5,23 @@ import {
   Operation,
   xdr,
   Contract,
-  Address,
   nativeToScVal,
   Horizon,
   Account,
   Transaction,
+  xdr as StellarXdr,
 } from '@stellar/stellar-sdk'
 import { 
   getAddress, 
   signTransaction as freighterSignTransaction,
-  isConnected,
   requestAccess
 } from '@stellar/freighter-api'
+
+declare global {
+  interface Window {
+    freighterApi?: unknown
+  }
+}
 
 const isMainnet = process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet'
 const networkPassphrase = isMainnet ? Networks.PUBLIC : Networks.TESTNET
@@ -50,7 +55,7 @@ export async function connectToFreighter(): Promise<string> {
   }
 
   console.log('[InferX Wallet] Starting connection flow...')
-  console.log('[InferX Wallet] window.freighterApi present at start:', !!(window as any).freighterApi)
+  console.log('[InferX Wallet] window.freighterApi present at start:', !!window.freighterApi)
 
   // Try getAddress() directly first - it's the most reliable method across Freighter versions
   // Modern Freighter (v5+) handles permission prompts internally
@@ -128,7 +133,7 @@ export async function connectToFreighter(): Promise<string> {
   }
 
   // No address and no explicit error - Freighter likely not installed
-  const hasFreighterInjection = !!(window as any).freighterApi
+  const hasFreighterInjection = !!window.freighterApi
   if (!hasFreighterInjection) {
     throw new Error(
       'Freighter wallet extension was not detected. Please install it from https://www.freighter.app, then refresh this page.'
@@ -150,17 +155,15 @@ export async function getFreighterPublicKey(): Promise<string> {
 
 export function verifySignature(publicKey: string, message: string, signature: string): boolean {
   try {
-    const msgBuffer = new TextEncoder().encode(message)
     const sigBuffer = Uint8Array.from(atob(signature), c => c.charCodeAt(0))
-
     const keyPair = xdr.PublicKey.publicKeyTypeEd25519(
-      Buffer.from(publicKey, 'base64') as any
+      Buffer.from(publicKey, 'base64') as unknown as Buffer
     )
 
     const hint = keyPair.ed25519().slice(-4)
     const decoratedSignature = new xdr.DecoratedSignature({
       hint,
-      signature: sigBuffer as any,
+      signature: sigBuffer as unknown as Buffer,
     })
 
     return decoratedSignature.signature().length === 64
@@ -206,13 +209,13 @@ export async function submitTransaction(
 ): Promise<Horizon.HorizonApi.TransactionResponse> {
   const transaction = TransactionBuilder.fromXDR(xdrString, networkPassphrase)
   const response = await horizonClient.submitTransaction(transaction)
-  return response as any
+  return response as Horizon.HorizonApi.TransactionResponse
 }
 
 export function buildSorobanInvocation(
   contractId: string,
   functionName: string,
-  args: any[]
+  args: Array<string | number | bigint | boolean | unknown>
 ): Transaction {
   const contract = new Contract(contractId)
   const sourcePublicKey = process.env.STELLAR_SOURCE_PUBLIC_KEY
@@ -220,11 +223,11 @@ export function buildSorobanInvocation(
     throw new Error('STELLAR_SOURCE_PUBLIC_KEY environment variable is not set')
   }
 
-  const scArgs = args.map(arg => {
+  const scArgs: StellarXdr.ScVal[] = args.map(arg => {
     if (typeof arg === 'string') return nativeToScVal(arg, { type: 'string' })
     if (typeof arg === 'number') return nativeToScVal(arg, { type: 'i128' })
     if (typeof arg === 'bigint') return nativeToScVal(arg, { type: 'i128' })
-    if (typeof arg === 'boolean') return nativeToScVal(arg, { type: 'bool' as any })
+    if (typeof arg === 'boolean') return nativeToScVal(arg)
     return nativeToScVal(arg)
   })
 
@@ -242,7 +245,7 @@ export function buildSorobanInvocation(
       })
     )
     .setTimeout(30)
-    .build() as any
+    .build()
 
   return transaction
 }

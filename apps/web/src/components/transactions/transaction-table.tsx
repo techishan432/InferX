@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { ExternalLink, ArrowUpDown } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"

@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { MessageSquare, Trash2 } from "lucide-react"
+import { MessageSquare } from "lucide-react"
 
 interface Conversation {
   id: string

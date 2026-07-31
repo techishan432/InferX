@@ -16,9 +16,14 @@ export function ProfileForm() {
   const [saving, setSaving] = React.useState(false)
   const [saved, setSaved] = React.useState(false)
 
-  React.useEffect(() => {
-    if (user?.displayName) setDisplayName(user.displayName)
-  }, [user])
+  const [prevUserDisplayName, setPrevUserDisplayName] = React.useState(user?.displayName)
+
+  if (user?.displayName !== prevUserDisplayName) {
+    setPrevUserDisplayName(user?.displayName)
+    if (user?.displayName) {
+      setDisplayName(user.displayName)
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

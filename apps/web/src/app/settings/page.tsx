@@ -9,7 +9,6 @@ import { ProfileForm } from "@/components/settings/profile-form"
 import { WalletSettings } from "@/components/settings/wallet-settings"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 
 export default function SettingsPage() {
   const router = useRouter()

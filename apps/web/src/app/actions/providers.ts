@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { verifyJWT } from '@/lib/auth'
 import { encrypt } from '@/lib/encryption'
 
@@ -41,7 +42,7 @@ export async function createEndpoint(data: {
   const encryptedApiKey = await encrypt(data.apiKey)
   const encryptedBaseUrl = await encrypt(data.baseUrl)
 
-  const endpoint = await prisma.$transaction(async (tx: any) => {
+  const endpoint = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const newEndpoint = await tx.endpoint.create({
       data: {
         providerId: provider.id,

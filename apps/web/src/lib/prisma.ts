@@ -12,7 +12,7 @@ function createPrismaClient() {
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-  } as any);
+  });
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
