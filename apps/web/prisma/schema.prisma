@@ -1,0 +1,296 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  PROVIDER
+  CONSUMER
+  ADMIN
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum EscrowStatus {
+  CREATED
+  RELEASED
+  REFUNDED
+  EXPIRED
+}
+
+enum PaymentType {
+  DEPOSIT
+  WITHDRAWAL
+  PLATFORM_FEE
+  INFERENCE_PAYMENT
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum HealthStatus {
+  ONLINE
+  OFFLINE
+  DEGRADED
+  UNKNOWN
+}
+
+model User {
+  id             String   @id @default(cuid())
+  walletAddress  String   @unique
+  displayName    String?
+  email          String?  @unique
+  bio            String?
+  avatarUrl      String?
+  role           Role     @default(USER)
+  isProvider     Boolean  @default(false)
+  isConsumer     Boolean  @default(false)
+  emailVerified  Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  provider            Provider?
+  consumerTransactions Transaction[] @relation("ConsumerTransactions")
+  payments            Payment[]
+  ratings             Rating[]    @relation("ReviewerRatings")
+  conversations       Conversation[]
+  chatMessages        ChatMessage[]
+
+  @@index([walletAddress])
+  @@map("users")
+}
+
+model Provider {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name             String
+  description      String?
+  isActive         Boolean   @default(true)
+  registeredAt     DateTime  @default(now())
+  totalEndpoints   Int       @default(0)
+  onChainAddress   String?
+  totalEarnings    Decimal   @default(0) @db.Decimal(20, 7)
+  totalRequests    BigInt    @default(0)
+  averageRating    Float     @default(0)
+  totalReviews     Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  endpoints        Endpoint[]
+  transactions     Transaction[]  @relation("ProviderTransactions")
+
+  @@index([userId])
+  @@index([isActive])
+  @@map("providers")
+}
+
+model Endpoint {
+  id                 String        @id @default(cuid())
+  providerId         String
+  provider           Provider      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  modelName          String
+  displayName        String
+  description        String?
+  pricePerRequest    Decimal       @db.Decimal(20, 7)
+  maxInputTokens     Int
+  maxOutputTokens    Int
+  contextLength      Int
+  supportsVision     Boolean       @default(false)
+  supportsStreaming  Boolean       @default(true)
+  isActive           Boolean       @default(true)
+  rateLimit          Int           @default(60)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  latencyMs          Int?
+  location           String?
+  totalRequests      BigInt        @default(0)
+  onChainEndpointId  Int?
+  healthStatus       HealthStatus  @default(UNKNOWN)
+  lastHealthCheck    DateTime?
+  averageRating      Float         @default(0)
+  totalReviews       Int           @default(0)
+  
+  providerSecret     ProviderSecret?
+  transactions       Transaction[]
+  ratings            Rating[]
+  healthChecks       HealthCheck[]
+  conversations      Conversation[]
+  chatMessages       ChatMessage[]
+
+  @@index([providerId])
+  @@index([isActive])
+  @@index([modelName])
+  @@index([pricePerRequest])
+  @@map("endpoints")
+}
+
+model ProviderSecret {
+  id              String   @id @default(cuid())
+  endpointId      String   @unique
+  endpoint        Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  encryptedApiKey String   @db.Text
+  encryptedBaseUrl String   @db.Text
+  encryptionIv    String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("provider_secrets")
+}
+
+model Transaction {
+  id                String            @id @default(cuid())
+  consumerId        String
+  consumer          User              @relation("ConsumerTransactions", fields: [consumerId], references: [id], onDelete: Cascade)
+  providerId        String
+  provider          Provider          @relation("ProviderTransactions", fields: [providerId], references: [id], onDelete: Cascade)
+  endpointId        String
+  endpoint          Endpoint          @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  amount            Decimal           @db.Decimal(20, 7)
+  platformFee       Decimal           @db.Decimal(20, 7)
+  providerPayment   Decimal           @db.Decimal(20, 7)
+  success           Boolean           @default(false)
+  stellarTxHash     String?
+  onChainRecordId   Int?
+  tokensUsed        Int?
+  latencyMs         Int?
+  status            TransactionStatus @default(PENDING)
+  errorMessage      String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  escrow            Escrow?
+
+  @@index([consumerId])
+  @@index([providerId])
+  @@index([endpointId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("transactions")
+}
+
+model Escrow {
+  id                String       @id @default(cuid())
+  transactionId     String       @unique
+  transaction       Transaction  @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  escrowIdOnChain   Int          @unique
+  consumerWallet    String
+  providerWallet    String
+  amount            Decimal      @db.Decimal(20, 7)
+  status            EscrowStatus @default(CREATED)
+  tokenAddress      String
+  createdAt         DateTime     @default(now())
+  resolvedAt        DateTime?
+
+  @@index([escrowIdOnChain])
+  @@index([status])
+  @@map("escrows")
+}
+
+model Rating {
+  id              String   @id @default(cuid())
+  reviewerId      String
+  reviewer        User     @relation("ReviewerRatings", fields: [reviewerId], references: [id], onDelete: Cascade)
+  endpointId      String
+  endpoint        Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  rating          Int
+  comment         String?  @db.Text
+  onChainTxHash   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([reviewerId, endpointId])
+  @@index([endpointId])
+  @@index([rating])
+  @@map("ratings")
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          PaymentType
+  amount        Decimal       @db.Decimal(20, 7)
+  stellarTxHash String?
+  status        PaymentStatus @default(PENDING)
+  metadata      Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@map("payments")
+}
+
+model HealthCheck {
+  id            String   @id @default(cuid())
+  endpointId    String
+  endpoint      Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  status        HealthStatus
+  latencyMs     Int?
+  responseTime  Int?
+  errorMessage  String?  @db.Text
+  checkedAt     DateTime @default(now())
+
+  @@index([endpointId])
+  @@index([status])
+  @@index([checkedAt])
+  @@map("health_checks")
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpointId  String
+  endpoint    Endpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  title       String   @default("New Conversation")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  messages    ChatMessage[]
+
+  @@index([userId])
+  @@index([endpointId])
+  @@map("conversations")
+}
+
+model ChatMessage {
+  id              String      @id @default(cuid())
+  conversationId  String
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpointId      String
+  endpoint        Endpoint    @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  role            MessageRole
+  content         String      @db.Text
+  tokensUsed      Int?
+  cost            Decimal?    @db.Decimal(20, 7)
+  createdAt       DateTime    @default(now())
+
+  @@index([conversationId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("chat_messages")
+}

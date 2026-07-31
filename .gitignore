@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.env
+.env.local
+*.log
+.DS_Store
+dist/
+.vercel
+postgres_data/
+*.wasm
+target/
+.claude/
+.claude/skills/
+.windsurf/
+.agents/
