@@ -15,6 +15,21 @@ InferX is a decentralized marketplace where AI model providers list their infere
 
 ## UI Preview
 
+### Desktop
+<p align="center">
+  <img src="docs/screenshots/desktop-1.png" width="49%" />
+  <img src="docs/screenshots/desktop-2.png" width="49%" />
+  <img src="docs/screenshots/desktop-3.png" width="49%" />
+  <img src="docs/screenshots/desktop-4.png" width="49%" />
+</p>
+
+### Mobile
+<p align="center">
+  <img src="docs/screenshots/mobile-1.png" width="32%" />
+  <img src="docs/screenshots/mobile-2.png" width="32%" />
+  <img src="docs/screenshots/mobile-3.png" width="32%" />
+</p>
+
 ### Desktop (Marketplace)
 ```
 ┌─────────────────────────────────────────────────────────────┐
