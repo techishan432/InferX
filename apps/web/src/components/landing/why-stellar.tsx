@@ -35,14 +35,14 @@ const benefits = [
 export function WhyStellar() {
   return (
     <section className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
-      <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-cyan-950/10 to-zinc-950" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-cyan-500/5 dark:via-cyan-950/20 to-background" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             <GradientText>Why Stellar?</GradientText>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             The blockchain built for real-world payments and decentralized
             applications.
           </p>
@@ -57,15 +57,15 @@ export function WhyStellar() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
             >
-              <GlassCard className="flex items-start gap-4 p-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-purple-500/10">
-                  <benefit.icon className="h-6 w-6 text-purple-400" />
+              <GlassCard className="flex items-start gap-4 p-6 hover:bg-muted/40 transition-colors">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-border/50 dark:border-white/10 bg-purple-500/10">
+                  <benefit.icon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">
+                  <h3 className="text-lg font-semibold text-foreground">
                     {benefit.title}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                     {benefit.description}
                   </p>
                 </div>
