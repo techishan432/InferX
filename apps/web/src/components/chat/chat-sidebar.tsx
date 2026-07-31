@@ -51,16 +51,25 @@ export function ChatSidebar({
   const [search, setSearch] = useState("")
   const { data: conversations, isLoading } = useConversations()
 
-  const filtered = useMemo(() => {
+  const list = useMemo<Conversation[]>(() => {
     if (!conversations) return []
-    if (!search.trim()) return conversations
+    if (Array.isArray(conversations)) return conversations
+    if (Array.isArray((conversations as { conversations?: Conversation[] }).conversations)) {
+      return (conversations as { conversations: Conversation[] }).conversations
+    }
+    return []
+  }, [conversations])
+
+  const filtered = useMemo(() => {
+    if (!Array.isArray(list)) return []
+    if (!search.trim()) return list
     const q = search.toLowerCase()
-    return conversations.filter(
+    return list.filter(
       (c: Conversation) =>
-        c.title.toLowerCase().includes(q) ||
-        c.endpoint.displayName.toLowerCase().includes(q)
+        c?.title?.toLowerCase().includes(q) ||
+        c?.endpoint?.displayName?.toLowerCase().includes(q)
     )
-  }, [conversations, search])
+  }, [list, search])
 
   return (
     <div className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-card/70 backdrop-blur-md">
