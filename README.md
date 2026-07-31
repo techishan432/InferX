@@ -2,7 +2,73 @@
 
 > **The Decentralized AI Inference Marketplace powered by Stellar**
 
+[![CI](https://github.com/techishan432/InferX/actions/workflows/ci.yml/badge.svg)](https://github.com/techishan432/InferX/actions/workflows/ci.yml)
+
 InferX is a decentralized marketplace where AI model providers list their inference endpoints and consumers access them with transparent, on-chain payments via the Stellar blockchain. Built with Next.js and Soroban smart contracts, InferX eliminates middlemen and gives providers full control over pricing while ensuring consumers get the best rates.
+
+## Live Demo
+
+- **Production URL:** [inferx.vercel.app](https://inferx.vercel.app) (or your deployed Vercel URL)
+- **Testnet Explorer:** [stellar.expert](https://stellar.expert/explorer/testnet/contract/CCL5HTVAJUHP73OG4K3MVBVUPPRTY7UBKB2346YDDVUCE7SEQFZWTQYV)
+- **Mobile UI (Responsive):** Fully optimized for mobile, tablet, and desktop (see [screenshots](docs/screenshots/README.md))
+
+## UI Preview
+
+### Desktop (Marketplace)
+```
+┌─────────────────────────────────────────────────────────────┐
+│  InferX              Marketplace  Chat  Dashboard  Analytics │  [Connect Wallet]
+├─────────────────────────────────────────────────────────────┤
+│                        Discover AI Models                    │
+│         Browse and connect with AI models powered            │
+│                  by Stellar blockchain payments              │
+│                                                              │
+│   🔍  Search models, providers...                           │
+│                                                              │
+│  [Filters]  5 models found                Sort: Popularity ↓│
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Category: All Models                               │   │
+│  │  Price Range (XLM): [Min] ─── [Max]                 │   │
+│  │  Min Context Length: ═══●══════════ 32K             │   │
+│  │  ✓ Streaming    ✓ Vision                            │   │
+│  │                5 results                             │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │ ● ONLINE        │  │ ● ONLINE        │  │ ● ONLINE    │ │
+│  │ GPT-4o          │  │ DeepSeek V3     │  │ Qwen 2.5    │ │
+│  │ AlphaAI Labs    │  │ AlphaAI Labs    │  │ AlphaAI     │ │
+│  │ 0.005 XLM/req   │  │ 0.001 XLM/req   │  │ 0.002 XL…   │ │
+│  │ ⭐ 4.8 (12)     │  │ ⭐ 4.6 (8)      │  │ ⭐ 4.5      │ │
+│  │ [Streaming][👁] │  │ [Streaming]     │  │ [Streaming] │ │
+│  │ 128K context    │  │ 64K context     │  │ 32K context │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Mobile (Chat Interface — 390px)
+```
+┌───────────┐
+│ inferX /  │
+│   Chat    │
+├───────────┤  ← Hamburger reveals sidebar
+│ [≡] [GPT] │
+├───────────┤
+│ 👤 User   │
+│ "Explain  │
+│  Stellar" │
+├───────────┤
+│ 🤖 AI     │
+│ "Stellar  │
+│  is a     │
+│  layer-1  │
+│  blockchain│"│
+├───────────┤
+│ 📎 [Send] │
+└───────────┘
+```
+
+See [docs/screenshots/](docs/screenshots/README.md) for the full screenshot capture guide.
 
 ## Architecture
 
