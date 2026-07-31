@@ -8,7 +8,7 @@ InferX is a decentralized marketplace where AI model providers list their infere
 
 ## Live Demo
 
-- **Production URL:** [inferx.vercel.app](https://inferx.vercel.app) (or your deployed Vercel URL)
+- **Production URL:** [infer-x-olive.vercel.app](https://infer-x-olive.vercel.app/)
 - **Testnet Explorer:** [stellar.expert](https://stellar.expert/explorer/testnet/contract/CCL5HTVAJUHP73OG4K3MVBVUPPRTY7UBKB2346YDDVUCE7SEQFZWTQYV)
 - **Mobile UI (Responsive):** Fully optimized for mobile, tablet, and desktop (see [screenshots](docs/screenshots/README.md))
 
