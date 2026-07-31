@@ -55,7 +55,7 @@ export function HowItWorks() {
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             <GradientText>How InferX Works</GradientText>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             From registration to payment &mdash; five simple steps.
           </p>
         </div>
@@ -75,16 +75,16 @@ export function HowItWorks() {
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.3 }}
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-zinc-950 shadow-lg shadow-cyan-500/10">
-                    <step.icon className="h-7 w-7 text-cyan-400" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-border/50 dark:border-white/10 bg-background shadow-lg shadow-cyan-500/10">
+                    <step.icon className="h-7 w-7 text-cyan-600 dark:text-cyan-400" />
                   </div>
                   <div className="mt-3 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 text-xs font-bold text-white">
                     {i + 1}
                   </div>
-                  <h3 className="mt-3 text-sm font-semibold text-white">
+                  <h3 className="mt-3 text-sm font-semibold text-foreground">
                     {step.title}
                   </h3>
-                  <p className="mt-1 max-w-[140px] text-xs text-zinc-400">
+                  <p className="mt-1 max-w-[140px] text-xs text-muted-foreground">
                     {step.description}
                   </p>
                 </motion.div>
@@ -104,8 +104,8 @@ export function HowItWorks() {
                 viewport={{ once: true, amount: 0.3 }}
               >
                 <div className="relative flex flex-col items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-zinc-950">
-                    <step.icon className="h-5 w-5 text-cyan-400" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/50 dark:border-white/10 bg-background">
+                    <step.icon className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                   </div>
                   {i < steps.length - 1 && (
                     <div className="mt-2 h-8 w-0.5 bg-gradient-to-b from-cyan-500/50 to-purple-500/50" />
@@ -115,10 +115,10 @@ export function HowItWorks() {
                   <div className="mb-1 flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 text-[10px] font-bold text-white">
                     {i + 1}
                   </div>
-                  <h3 className="text-sm font-semibold text-white">
+                  <h3 className="text-sm font-semibold text-foreground">
                     {step.title}
                   </h3>
-                  <p className="mt-0.5 text-sm text-zinc-400">
+                  <p className="mt-0.5 text-sm text-muted-foreground">
                     {step.description}
                   </p>
                 </div>

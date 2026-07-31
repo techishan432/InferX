@@ -73,7 +73,7 @@ export function FeaturesSection() {
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             <GradientText>Built for the Future</GradientText>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             Everything you need to build, deploy, and monetize AI inference at
             scale.
           </p>
@@ -91,13 +91,13 @@ export function FeaturesSection() {
               <GlassCard className="group relative h-full p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/30">
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                 <div className="relative">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-cyan-500/10">
-                    <feature.icon className="h-6 w-6 text-cyan-400" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border/50 dark:border-white/10 bg-cyan-500/10">
+                    <feature.icon className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-white">
+                  <h3 className="mt-4 text-lg font-semibold text-foreground">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {feature.description}
                   </p>
                 </div>
