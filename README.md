@@ -215,6 +215,37 @@ chmod +x scripts/deploy-contracts.sh
 | GET | `/api/dashboard/stats` | Dashboard statistics |
 | GET | `/api/health` | API health check |
 
+## Testing
+
+### Soroban Contract Tests
+
+All contracts have comprehensive test coverage. **59 tests pass** across all contracts:
+
+```
+$ cd contracts && cargo test --release
+
+test result: ok. 13 passed; 0 failed; 0 ignored; (escrow)
+test result: ok. 14 passed; 0 failed; 0 ignored; (history)
+test result: ok. 14 passed; 0 failed; 0 ignored; (ratings)
+test result: ok. 18 passed; 0 failed; 0 ignored; (registry)
+```
+
+Test categories:
+- **Registry** (18 tests): Provider/endpoint registration, activation, updates, request counting
+- **Escrow** (13 tests): Escrow creation, release, refund, expiration, access control
+- **Ratings** (14 tests): Review submission, rating summaries, duplicate prevention
+- **History** (13 tests): Transaction recording, provider/consumer stats
+
+### Frontend Tests
+
+Frontend build validated via Next.js production build (type-checks, static analysis):
+```bash
+cd apps/web && npm run build
+```
+
+CI pipeline automatically runs all tests on every push to `main`.
+[![CI](https://github.com/techishan432/InferX/actions/workflows/ci.yml/badge.svg)](https://github.com/techishan432/InferX/actions/workflows/ci.yml)
+
 ## Architecture Decisions
 
 - **Route Handlers over API Routes** — Using Next.js App Router route handlers for better type safety and streaming support
