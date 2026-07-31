@@ -119,6 +119,44 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 The Soroban contracts live in `contracts/` and are written in Rust.
 
+### Testnet Deployment
+
+All contracts have been successfully deployed to Stellar Testnet.
+
+| Contract | Contract ID | Explorer |
+|----------|-------------|----------|
+| **Registry** | `CCL5HTVAJUHP73OG4K3MVBVUPPRTY7UBKB2346YDDVUCE7SEQFZWTQYV` | [View](https://stellar.expert/explorer/testnet/contract/CCL5HTVAJUHP73OG4K3MVBVUPPRTY7UBKB2346YDDVUCE7SEQFZWTQYV) |
+| **Escrow** | `CBIBPQJ6MBZHZI5CUXA7O4K4SLJELDIJOUP2KOJQR5K5OBUN5OVP3NOS` | [View](https://stellar.expert/explorer/testnet/contract/CBIBPQJ6MBZHZI5CUXA7O4K4SLJELDIJOUP2KOJQR5K5OBUN5OVP3NOS) |
+| **Ratings** | `CD2ZMDC3NHIU2EA66CCKXIDG5K3X4E5QXMRCEG7EJIBQB3VWJ5NZ2LKZ` | [View](https://stellar.expert/explorer/testnet/contract/CD2ZMDC3NHIU2EA66CCKXIDG5K3X4E5QXMRCEG7EJIBQB3VWJ5NZ2LKZ) |
+| **History** | `CBXPMFNSM3BZPZZOA4AXOCMVOWN2Q4RKME7RRYTFEUQWXP4YSUW7ZUZE` | [View](https://stellar.expert/explorer/testnet/contract/CBXPMFNSM3BZPZZOA4AXOCMVOWN2Q4RKME7RRYTFEUQWXP4YSUW7ZUZE) |
+
+**Deployer Address:** `GAKAWNAR76U2MPDKUZXPYA6S6S4HOTVIXIRXIEKXJXVNA4XUIHGDSLYY`
+
+#### Deployment Transaction Hashes
+
+| Contract | Deployment TX | Explorer |
+|----------|---------------|----------|
+| **Registry** | `ef1da640c30d353095464c09e2c75fb582e94d7f34c3eea63aeee8952e11bb91` | [View](https://stellar.expert/explorer/testnet/tx/ef1da640c30d353095464c09e2c75fb582e94d7f34c3eea63aeee8952e11bb91) |
+| **Escrow** | `b0bf4ca637bea1a234672519accffd1e6d40ae37da5dbd5bfd34b90cfc2b0a9e` | [View](https://stellar.expert/explorer/testnet/tx/b0bf4ca637bea1a234672519accffd1e6d40ae37da5dbd5bfd34b90cfc2b0a9e) |
+| **Ratings** | `28bbf5360551c1e0398e29065dd1b248a5e319435f392dba914937503d3adf4d` | [View](https://stellar.expert/explorer/testnet/tx/28bbf5360551c1e0398e29065dd1b248a5e319435f392dba914937503d3adf4d) |
+| **History** | `c281b388e93b5cfc251cb9abbfddb7154b9aabb66d28f07662114656392b86f6` | [View](https://stellar.expert/explorer/testnet/tx/c281b388e93b5cfc251cb9abbfddb7154b9aabb66d28f07662114656392b86f6) |
+
+#### Initialization Transaction Hashes
+
+| Contract | Init TX | Explorer |
+|----------|---------|----------|
+| **Registry** (admin set) | `d7879e1d4128a3c94490756849b41f6af25231ef40d0b8923120c5e06c1879e3` | [View](https://stellar.expert/explorer/testnet/tx/d7879e1d4128a3c94490756849b41f6af25231ef40d0b8923120c5e06c1879e3) |
+| **Escrow** (admin + 5% fee) | `f520e55e391e6f33aa646d46a2f02fb4a43334581010e319cfca76938bfcb7e8` | [View](https://stellar.expert/explorer/testnet/tx/f520e55e391e6f33aa646d46a2f02fb4a43334581010e319cfca76938bfcb7e8) |
+| **Ratings** (admin set) | `d00a3c779462c2c700481ce5b8b9b941254d51f3baf7b8b15b7eafe0a77ee2ec` | [View](https://stellar.expert/explorer/testnet/tx/d00a3c779462c2c700481ce5b8b9b941254d51f3baf7b8b15b7eafe0a77ee2ec) |
+| **History** (admin set) | `64ac9de4851c4fe0953053cf5904f4770ab973e9f043f83d24db4dd74ad583fb` | [View](https://stellar.expert/explorer/testnet/tx/64ac9de4851c4fe0953053cf5904f4770ab973e9f043f83d24db4dd74ad583fb) |
+
+#### Contract Interaction Transaction Hashes
+
+| Action | Transaction Hash | Explorer |
+|--------|------------------|----------|
+| **Register Provider** (`registry.register_provider`) | `c451c7caa154969763094ccd15cdc01b73f18e1427cf6b1fcc542a2566ba3ba8` | [View](https://stellar.expert/explorer/testnet/tx/c451c7caa154969763094ccd15cdc01b73f18e1427cf6b1fcc542a2566ba3ba8) |
+| **Submit Review** (`ratings.submit_review`, rating=5) | `ef3b9a01aa3b5ea520b8f3ab32cbe6ec2649701a7808c367801ab3d694f9a288` | [View](https://stellar.expert/explorer/testnet/tx/ef3b9a01aa3b5ea520b8f3ab32cbe6ec2649701a7808c367801ab3d694f9a288) |
+
 ### Build & Deploy
 
 ```bash
