@@ -118,7 +118,7 @@ export function ChatSidebar({
           )}
 
           <AnimatePresence>
-            {filtered.map((conv: Conversation) => (
+            {(Array.isArray(filtered) ? filtered : []).map((conv: Conversation) => (
               <motion.div
                 key={conv.id}
                 initial={{ opacity: 0, x: -8 }}
