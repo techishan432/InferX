@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Search, Sparkles } from "lucide-react"
+import { Search, Sparkles, Key } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { EmptyState } from "@/components/ui/empty-state"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,8 @@ import { useMarketplace } from "@/hooks/use-marketplace"
 import { EndpointCard, EndpointCardSkeleton } from "@/components/marketplace/endpoint-card"
 import { FilterPanel } from "@/components/marketplace/filter-panel"
 import { SortDropdown } from "@/components/marketplace/sort-dropdown"
+import { AddEndpointDialog } from "@/components/dashboard/add-endpoint-dialog"
+import { useAuthStore } from "@/store/auth-store"
 import { SORT_OPTIONS } from "@/lib/constants"
 
 const DEFAULT_SORT = "popularity-desc"
@@ -124,6 +126,16 @@ function MarketplaceContent() {
     [effectiveFilters, sortBy, syncUrl]
   )
 
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
+  const { user, loginDemoUser } = useAuthStore()
+
+  const handleOpenAddDialog = () => {
+    if (!user) {
+      loginDemoUser(true)
+    }
+    setAddDialogOpen(true)
+  }
+
   const totalPages = data?.totalPages ?? 1
   const total = data?.total ?? 0
   const endpoints = data?.data ?? []
@@ -144,8 +156,20 @@ function MarketplaceContent() {
             Discover AI Models
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Browse and connect with AI models powered by Stellar blockchain payments
+            Browse models or list your own API key to earn XLM micro-payments
           </p>
+
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <Button
+              variant="gradient"
+              size="sm"
+              onClick={handleOpenAddDialog}
+              className="gap-2 font-semibold shadow-md shadow-cyan-500/10 text-white"
+            >
+              <Key className="h-4 w-4" />
+              Donate / List API Key
+            </Button>
+          </div>
         </motion.div>
 
         <motion.div
@@ -296,6 +320,7 @@ function MarketplaceContent() {
           </div>
         </div>
       </div>
+      <AddEndpointDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} />
     </div>
   )
 }
