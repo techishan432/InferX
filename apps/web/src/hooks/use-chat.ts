@@ -63,10 +63,11 @@ async function createConversation(input: CreateConversationInput) {
     body: JSON.stringify(input),
   })
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.message || 'Failed to create conversation')
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.error || errorData.message || 'Failed to create conversation')
   }
-  return response.json()
+  const data = await response.json()
+  return data.conversation ?? data
 }
 
 async function sendMessage(input: SendMessageInput) {

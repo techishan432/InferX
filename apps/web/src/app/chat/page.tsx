@@ -49,7 +49,7 @@ function ChatContent() {
             endpointId: selectedEndpoint,
             title: content.slice(0, 50),
           })
-          conversationId = conv.id as string
+          conversationId = (conv?.id || conv?.conversation?.id) as string
           setActiveConversationId(conversationId)
         } catch (err) {
           console.error("Failed to create conversation:", err)
