@@ -51,13 +51,6 @@ export const useWalletStore = create<WalletStore>()(
           })
         } catch (error) {
           console.error('Wallet connection failed:', error)
-          
-          // Provide more helpful error messages
-          if (error instanceof Error) {
-            if (error.message.includes('Freighter is not installed')) {
-              throw new Error('Freighter wallet not detected. Please install it from freighter.app')
-            }
-          }
           throw error
         }
       },

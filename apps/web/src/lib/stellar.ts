@@ -26,69 +26,118 @@ const horizonUrl = process.env.NEXT_PUBLIC_STELLAR_HORIZON_URL ?? 'https://horiz
 const sorobanClient = new rpc.Server(sorobanRpcUrl, { allowHttp: false })
 const horizonClient = new Horizon.Server(horizonUrl)
 
+function extractErrorMessage(err: unknown): string {
+  if (!err) return 'Unknown error'
+  if (typeof err === 'string') return err
+  if (err instanceof Error) return err.message
+  if (typeof err === 'object' && err !== null) {
+    const e = err as Record<string, unknown>
+    if (typeof e.message === 'string') return e.message
+    if (typeof e.error === 'string') return e.error
+    if (typeof e.msg === 'string') return e.msg
+  }
+  try {
+    return JSON.stringify(err)
+  } catch {
+    return 'Unknown error'
+  }
+}
+
 export async function connectToFreighter(): Promise<string> {
   // Check if we're in a browser environment
   if (typeof window === 'undefined') {
     throw new Error('Freighter can only be used in a browser environment.')
   }
 
-  // Wait for Freighter to inject its API (up to 3 seconds)
-  const maxWaitTime = 3000
-  const checkInterval = 100
-  let waited = 0
+  console.log('[InferX Wallet] Starting connection flow...')
+  console.log('[InferX Wallet] window.freighterApi present at start:', !!(window as any).freighterApi)
 
-  while (!(window as any).freighterApi && waited < maxWaitTime) {
-    await new Promise(resolve => setTimeout(resolve, checkInterval))
-    waited += checkInterval
+  // Try getAddress() directly first - it's the most reliable method across Freighter versions
+  // Modern Freighter (v5+) handles permission prompts internally
+  let address = ''
+  let lastError: unknown = null
+
+  try {
+    console.log('[InferX Wallet] Calling getAddress()...')
+    const result = await getAddress()
+    console.log('[InferX Wallet] getAddress() returned:', result)
+
+    if (result.error) {
+      lastError = result.error
+      console.warn('[InferX Wallet] getAddress() returned error object:', result.error)
+    } else if (result.address && result.address.trim().length > 0) {
+      address = result.address
+    } else {
+      // No error but no address either - try requestAccess
+      console.log('[InferX Wallet] No address returned, trying requestAccess()...')
+      const access = await requestAccess()
+      console.log('[InferX Wallet] requestAccess() returned:', access)
+      if (access.error) {
+        lastError = access.error
+      } else if (access.address) {
+        address = access.address
+      }
+    }
+  } catch (err) {
+    console.error('[InferX Wallet] getAddress() threw exception:', err)
+    lastError = err
+
+    // Try requestAccess as fallback
+    try {
+      console.log('[InferX Wallet] Falling back to requestAccess()...')
+      const access = await requestAccess()
+      console.log('[InferX Wallet] requestAccess() returned:', access)
+      if (access.error) {
+        lastError = access.error
+      } else if (access.address) {
+        address = access.address
+        lastError = null
+      }
+    } catch (err2) {
+      console.error('[InferX Wallet] requestAccess() also threw:', err2)
+      lastError = err2
+    }
   }
 
-  if (!(window as any).freighterApi) {
+  // If we got an address, return it regardless of errors
+  if (address && address.trim().length > 0) {
+    console.log('[InferX Wallet] ✓ Connected successfully:', address)
+    return address
+  }
+
+  // If we have an error, give specific helpful messages
+  if (lastError) {
+    const msg = extractErrorMessage(lastError).toLowerCase()
+    console.error('[InferX Wallet] ✗ Connection failed:', msg, lastError)
+
+    if (msg.includes('denied') || msg.includes('rejected') || msg.includes('user') && msg.includes('cancel')) {
+      throw new Error('Connection was cancelled or denied.')
+    }
+    if (msg.includes('not allowed') || msg.includes('permission')) {
+      throw new Error('Permission denied. Please allow this site in Freighter\'s site access settings.')
+    }
+    if (msg.includes('locked')) {
+      throw new Error('Freighter is locked. Please unlock it with your password and try again.')
+    }
+    if (msg.includes('no account') || msg.includes('no wallet')) {
+      throw new Error('No account found in Freighter. Please create or import an account first.')
+    }
+
+    // Generic but includes the real error for debugging
+    throw new Error(`Freighter error: ${extractErrorMessage(lastError)}`)
+  }
+
+  // No address and no explicit error - Freighter likely not installed
+  const hasFreighterInjection = !!(window as any).freighterApi
+  if (!hasFreighterInjection) {
     throw new Error(
-      'Freighter wallet extension not detected. Please install it from https://www.freighter.app and refresh the page.'
+      'Freighter wallet extension was not detected. Please install it from https://www.freighter.app, then refresh this page.'
     )
   }
 
-  // Check if already connected
-  const connectionStatus = await isConnected()
-  console.log('Freighter connection status:', connectionStatus)
-
-  if (connectionStatus.error) {
-    throw new Error(`Failed to check Freighter connection: ${connectionStatus.error.message}`)
-  }
-
-  // If not connected, request access (this shows the popup)
-  let address = ''
-  if (!connectionStatus.isConnected) {
-    const accessResult = await requestAccess()
-    console.log('Freighter access result:', accessResult)
-    
-    if (accessResult.error) {
-      const errorMsg = accessResult.error.message.toLowerCase()
-      if (errorMsg.includes('denied') || errorMsg.includes('rejected')) {
-        throw new Error('Connection request was denied by user.')
-      }
-      throw new Error(`Failed to authorize with Freighter: ${accessResult.error.message}`)
-    }
-    
-    address = accessResult.address
-  } else {
-    // Already connected, just get the address
-    const result = await getAddress()
-    console.log('Freighter getAddress result:', result)
-    
-    if (result.error) {
-      throw new Error(`Failed to get address from Freighter: ${result.error.message}`)
-    }
-    
-    address = result.address
-  }
-  
-  // Validate we got an address
-  if (!address || address.trim() === '') {
-    throw new Error('No wallet address returned. Please make sure you have an account set up in Freighter.')
-  }
-  
-  return address
+  throw new Error(
+    'Could not connect to Freighter. Make sure the extension is enabled, you have an account set up, and try again.'
+  )
 }
 
 export async function getFreighterPublicKey(): Promise<string> {
